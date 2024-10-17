@@ -5,8 +5,14 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './server.component.html',
-  styleUrl: './server.component.css'
+  styleUrl: './server.component.css',
 })
 export class ServerComponent {
-  currentStatus = 'online'
+  currentStatus = 'online';
+
+  ngOnInit() {
+    setInterval(() => {
+      this.currentStatus = Math.random() > 0.5 ? 'online' : 'offline';
+    }, 1000);
+  }
 }
