@@ -1,5 +1,14 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  Injectable,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 
+type serverStatus = 'online' | 'offline' | 'unknown';
 @Component({
   selector: 'app-server',
   standalone: true,
@@ -7,12 +16,30 @@ import { Component } from '@angular/core';
   templateUrl: './server.component.html',
   styleUrl: './server.component.css',
 })
-export class ServerComponent {
-  currentStatus = 'online';
+export class ServerComponent implements OnInit, OnDestroy {
+  currentStatus = signal<serverStatus>('online');
 
+  constructor() {
+    // effect(() => {
+    //   console.log(this.currentStatus());
+    // });
+  }
   ngOnInit() {
     setInterval(() => {
-      this.currentStatus = Math.random() > 0.5 ? 'online' : 'offline';
-    }, 1000);
+      this.currentStatus.set(
+        Math.random() > 0.5
+          ? 'online'
+          : Math.random() > 0.6
+          ? 'unknown'
+          : 'offline'
+      );
+    }, 4500);
   }
+
+  ngOnDestroy(): void {}
+}
+function injectable(): (
+  target: typeof ServerComponent
+) => void | typeof ServerComponent {
+  throw new Error('Function not implemented.');
 }
